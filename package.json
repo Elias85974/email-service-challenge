@@ -1,0 +1,30 @@
+{
+  "name": "email-service-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon",
+    "tsNode": "cd src && ts-node index.ts",
+    "transpilation": "tsc",
+    "build:prod": "rimraf ./build && tsc",
+    "start:prod": "npm run build:prod && node build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elias85974/email-service-challenge.git"
+  },
+  "author": "@Elias85974",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Elias85974/email-service-challenge/issues"
+  },
+  "homepage": "https://github.com/Elias85974/email-service-challenge#readme",
+  "devDependencies": {
+    "@types/node": "^22.1.0",
+    "nodemon": "^3.1.4",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
