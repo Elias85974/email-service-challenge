@@ -1,20 +1,24 @@
-import { router } from "../constants";
+import {Email, router} from "../constants";
 import {sendMail} from "../service/EmailService";
+import {HandledError} from "../HandledError";
 
-router.post("/sendEmail", (req, res) => {
-    const data: {sender: string, recipient: string, subject: string, message: string} = req.body;
+router.post("/sendEmail", async (req, res) => {
+    const email: Email = req.body;
     try {
-        if (!data.message || !data.recipient || !data.sender) {
+        if (!email || !email.message || !email.recipient || !email.sender || !email.subject) {
             res.status(400).send({message: "Please send me the required data to send your email"});
         }
         else {
-            sendMail(data.sender, data.recipient, data.subject, data.message).then(() => {
-                res.status(200).send({message: "Everything working correctly"})
-            });
+            await sendMail(email);
+            res.status(200).send({ message: "Everything working correctly" });
         }
     }
     catch (e) {
-        res.status(500).send("Something went wrong while trying to send your email");
+        console.error("Error sending the mail: ", e);
+        if (e instanceof HandledError) {
+            res.status(500).send(e.message);
+        }
+        res.status(500).send({message: "Something went wrong while trying to send your email"});
     }
 })
 

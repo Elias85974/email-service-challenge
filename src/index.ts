@@ -1,14 +1,15 @@
-import express from "express";
+import express, {Express} from "express";
 import userController from "./controller/UserController";
 import emailController from "./controller/EmailController";
+import {auth} from "./middleware/Authentication";
 
-const app = express();
+const app: Express = express();
 
 app.use(express.json());
 
-app.use(userController);
-app.use(emailController);
+app.use("/user", userController);
+app.use("/email", auth, emailController);
 
-const port: number = 3000;
+const port: number = 3001;
 app.listen(port);
 console.log(`Server now running on port: ${port}`);

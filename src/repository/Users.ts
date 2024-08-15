@@ -1,18 +1,16 @@
-import { prismaClient } from "../constants";
+import {prismaClient, User} from "../constants";
 import { HandledError } from "../HandledError";
-
-export type User = {
-    id: number,
-    email: string,
-    userName: string,
-    password: string,
-    emailsSent: number
-};
+import bcrypt from 'bcrypt';
 
 export class UserRepository {
     async createUser(registerData: { email: string, userName: string, password: string }): Promise<void> {
+        const hashedPassword: string = await bcrypt.hash(registerData.password, 16);
         await prismaClient.user.create({
-            data: registerData
+            data: {
+                email: registerData.email,
+                userName: registerData.userName,
+                password: hashedPassword
+            }
         });
     }
 
