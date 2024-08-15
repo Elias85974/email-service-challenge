@@ -1,5 +1,7 @@
-import { createUser } from "../repository/Users";
+import { UserRepository } from "../repository/Users";
+
+const userRepo: UserRepository = new UserRepository();
 
 export async function register(registerData: { email: string; userName: string; password: string; }): Promise<void> {
-    await createUser(registerData);
+    await userRepo.createUser(registerData);
 }

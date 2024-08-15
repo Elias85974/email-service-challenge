@@ -35,8 +35,10 @@
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
+    "@types/nodemailer": "^6.4.15",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.14",
     "sparkpost": "^2.1.4"
   }
 }

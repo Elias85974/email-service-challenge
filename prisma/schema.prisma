@@ -18,12 +18,5 @@ model User {
   email String @unique
   userName String
   password String
-  emails Email[]
   emailsSent Int @default(0)
-}
-
-model Email {
-  id Int @id @default(autoincrement())
-  user User @relation(fields: [email], references: [email])
-  email String
 }

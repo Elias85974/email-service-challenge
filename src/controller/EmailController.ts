@@ -1,15 +1,16 @@
 import { router } from "../constants";
-import {sendEmail} from "../service/EmailService";
+import {sendMail} from "../service/EmailService";
 
 router.post("/sendEmail", (req, res) => {
-    const data: {sender: string, recipient: string, message: string} = req.body;
+    const data: {sender: string, recipient: string, subject: string, message: string} = req.body;
     try {
         if (!data.message || !data.recipient || !data.sender) {
             res.status(400).send({message: "Please send me the required data to send your email"});
         }
         else {
-            sendEmail(data.sender, data.recipient, data.message);
-            res.status(200).send({message: "Everything working correctly"});
+            sendMail(data.sender, data.recipient, data.subject, data.message).then(() => {
+                res.status(200).send({message: "Everything working correctly"})
+            });
         }
     }
     catch (e) {
