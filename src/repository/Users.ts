@@ -39,6 +39,28 @@ export class UserRepository {
         }
     }
 
+    async getAllUsersStatistics(): Promise<{ email: string, emailsSent: number }[]> {
+        return prismaClient.user.findMany({
+            where: {
+                emailsSent: {
+                    gt: 0
+                }
+            },
+            select: {
+                email: true,
+                emailsSent: true
+            }
+        })
+    }
+
+    async isAdmin(email: string): Promise<boolean> {
+        const foundUser: User | null = await this.getFromMail(email);
+        if (foundUser) {
+            return foundUser.id === 1;
+        }
+        throw new HandledError("User is not allowed to be in this platform");
+    }
+
     async allUsers(): Promise<User[]> {
         return prismaClient.user.findMany();
     }

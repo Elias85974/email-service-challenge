@@ -4,7 +4,6 @@ import {User} from "../constants";
 import bcrypt from 'bcrypt';
 import {createToken} from "../middleware/Authentication";
 
-const secretKey: string = process.env.JWT_SECRET as string;
 const userRepo: UserRepository = new UserRepository();
 
 export async function login(loginData: {email: string, password: string}): Promise<string> {
