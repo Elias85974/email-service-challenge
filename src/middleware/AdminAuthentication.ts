@@ -22,6 +22,8 @@ export const adminAuth = async (req: Request, res: Response, next: NextFunction)
         if (e instanceof HandledError) {
             res.send({message: e.message});
         }
-        res.send({message: "Something went wrong in the admin authentication"});
+        else {
+            res.send({message: "Something went wrong in the admin authentication"});
+        }
     }
 }

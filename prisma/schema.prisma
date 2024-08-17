@@ -14,9 +14,18 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
   userName String
   password String
-  emailsSent Int @default(0)
+  emails   Email[] @relation()
+}
+
+model Email {
+  id       Int      @id @default(autoincrement())
+  sender   User     @relation(fields: [senderId], references: [id])
+  senderId Int
+  subject  String
+  message  String
+  date     DateTime
 }

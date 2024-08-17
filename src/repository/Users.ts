@@ -22,36 +22,40 @@ export class UserRepository {
         });
     }
 
-    async incrementEmailCount(email: string): Promise<void> {
+    async getIdFromMail(email: string): Promise<number> {
         try {
-            await prismaClient.user.update({
+            const user = await prismaClient.user.findFirstOrThrow({
                 where: {
                     email: email
                 },
-                data: {
-                    emailsSent: {
-                        increment: 1
-                    }
-                }
-            });
-        } catch (e) {
-            throw new HandledError("User is not allowed to be in this platform");
+            })
+            return user.id;
+        }
+        catch (e) {
+            throw new HandledError("No user found in your request");
         }
     }
 
     async getAllUsersStatistics(): Promise<{ email: string, emailsSent: number }[]> {
-        return prismaClient.user.findMany({
-            where: {
-                emailsSent: {
-                    gt: 0
+    const users = await prismaClient.user.findMany({
+        select: {
+            email: true,
+            emails: {
+                where: {
+                    date: {
+                        gte: new Date(new Date().setHours(0, 0, 0, 0)),
+                        lt: new Date(new Date().setHours(23, 59, 59, 999))
+                    }
                 }
-            },
-            select: {
-                email: true,
-                emailsSent: true
             }
-        })
-    }
+        }
+    });
+
+    return users.map(user => ({
+        email: user.email,
+        emailsSent: user.emails.length
+    })).filter(user => user.emailsSent > 0);
+}
 
     async isAdmin(email: string): Promise<boolean> {
         const foundUser: User | null = await this.getFromMail(email);
@@ -61,7 +65,20 @@ export class UserRepository {
         throw new HandledError("User is not allowed to be in this platform");
     }
 
-    async allUsers(): Promise<User[]> {
-        return prismaClient.user.findMany();
+    async getCurrentDayMailsCount(email: string): Promise<number> {
+        const user = await prismaClient.user.findFirst({
+            where: {
+                email: email
+            },
+            include: {
+                emails: true
+            }
+        });
+
+        if (!user) {
+            throw new HandledError("User not found");
+        }
+
+        return user.emails.length;
     }
 }

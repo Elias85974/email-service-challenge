@@ -27,10 +27,13 @@ router.post("/register", async (req, res): Promise<void> => {
     }
     catch (e: any) {
         console.error("Error registering the user: ", e);
+        res.status(500);
         if (e instanceof HandledError) {
-            res.status(500).send(e.message);
+            res.send(e.message);
         }
-        res.status(500).send("Something went wrong while creating the user");
+        else {
+            res.send("Something went wrong while creating the user");
+        }
     }
 })
 
@@ -40,16 +43,20 @@ router.post("/login", async (req, res): Promise<void> => {
         if (!loginData || !loginData.password || !loginData.email) {
             res.status(400).send({message: "Please send me the information needed correctly"})
         }
-        const token: string = await login(req.body);
-        res.header("Token", token);
-        res.status(200).send({message: "All things working correctly"});
+        else {
+            const token: string = await login(req.body);
+            res.status(200).send({token: token, message: "All things working correctly"});
+        }
     }
     catch (e: any) {
         console.error("Error login the user: ", e);
+        res.status(500);
         if (e instanceof HandledError) {
-            res.status( 500).send({message: e.message});
+            res.send({message: e.message});
         }
-        res.status(500).send({message: "Something went wrong while logging the user"});
+        else {
+            res.send({message: "Something went wrong while logging the user"});
+        }
     }
 })
 

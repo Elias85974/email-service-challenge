@@ -13,7 +13,9 @@ router.get("/stats", async (req, res) => {
         if (e instanceof HandledError) {
             res.send({message: e.message});
         }
-        res.send({message: "Something went wrong when getting your stats"});
+        else {
+            res.send({message: "Something went wrong when getting your stats"});
+        }
     }
 })
 

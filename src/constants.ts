@@ -8,7 +8,6 @@ export type User = {
     email: string,
     userName: string,
     password: string,
-    emailsSent: number
 };
 export type Email = {
     sender: string,

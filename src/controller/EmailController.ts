@@ -15,10 +15,13 @@ router.post("/sendEmail", async (req, res) => {
     }
     catch (e) {
         console.error("Error sending the mail: ", e);
+        res.status(500);
         if (e instanceof HandledError) {
-            res.status(500).send(e.message);
+            res.send(e.message);
         }
-        res.status(500).send({message: "Something went wrong while trying to send your email"});
+        else {
+            res.send({message: "Something went wrong while trying to send your email"});
+        }
     }
 })
 

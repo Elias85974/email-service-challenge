@@ -1,9 +1,11 @@
 import nodemailer from 'nodemailer';
 import {UserRepository} from "../repository/Users";
 import {HandledError} from "../HandledError";
-import {Email, User} from "../constants";
+import {Email} from "../constants";
+import {EmailsRepository} from "../repository/Emails";
 
 const userRepo: UserRepository = new UserRepository();
+const emailsRepo: EmailsRepository = new EmailsRepository();
 
 export const sendMail = async (email: Email): Promise<void> => {
     const transporter = nodemailer.createTransport({
@@ -21,18 +23,12 @@ export const sendMail = async (email: Email): Promise<void> => {
         subject: email.subject,
         html: formattedMessage,
     };
-
-    const user: User | null = await userRepo.getFromMail(email.sender);
-    if (user) {
-        if (user.emailsSent < 1000) {
-            await transporter.sendMail(mailOptions);
-            await userRepo.incrementEmailCount(email.sender);
-        }
-        else {
-            throw new HandledError("You have reached your daily limit of emails");
-        }
+    const emailsSent: number = await userRepo.getCurrentDayMailsCount(email.sender);
+    if (emailsSent < 1000) {
+        // await transporter.sendMail(mailOptions);
+        await emailsRepo.sendMail(email);
     }
     else {
-        throw new HandledError("User is not allowed to be in this platform");
+        throw new HandledError("You have reached your daily limit of emails");
     }
 }
