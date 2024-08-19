@@ -10,14 +10,14 @@ router.post("/sendEmail", async (req, res) => {
         }
         else {
             await sendMail(email);
-            res.status(200).send({ message: "Everything working correctly" });
+            res.status(200).send({ message: "All things working correctly" });
         }
     }
     catch (e) {
         console.error("Error sending the mail: ", e);
         res.status(500);
         if (e instanceof HandledError) {
-            res.send(e.message);
+            res.send({message: e.message});
         }
         else {
             res.send({message: "Something went wrong while trying to send your email"});

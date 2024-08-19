@@ -29,7 +29,7 @@ router.post("/register", async (req, res): Promise<void> => {
         console.error("Error registering the user: ", e);
         res.status(500);
         if (e instanceof HandledError) {
-            res.send(e.message);
+            res.send({message: e.message});
         }
         else {
             res.send("Something went wrong while creating the user");

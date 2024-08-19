@@ -3,9 +3,19 @@ import { HandledError } from "../HandledError";
 import bcrypt from 'bcrypt';
 
 export class UserRepository {
-    async createUser(registerData: { email: string, userName: string, password: string }): Promise<void> {
+    async createUser(registerData: { email: string, userName: string, password: string }): Promise<User> {
+        const existingUser = await prismaClient.user.findFirst({
+            where: {
+                email: registerData.email
+            }
+        });
+
+        if (existingUser) {
+            throw new Error('User with this email already exists');
+        }
+
         const hashedPassword: string = await bcrypt.hash(registerData.password, 16);
-        await prismaClient.user.create({
+        return prismaClient.user.create({
             data: {
                 email: registerData.email,
                 userName: registerData.userName,
@@ -80,5 +90,13 @@ export class UserRepository {
         }
 
         return user.emails.length;
+    }
+
+    async deleteUser(userId: number): Promise<void> {
+        await prismaClient.user.delete({
+            where: {
+                id: userId,
+            },
+        });
     }
 }

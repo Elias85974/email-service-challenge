@@ -25,7 +25,7 @@ export const sendMail = async (email: Email): Promise<void> => {
     };
     const emailsSent: number = await userRepo.getCurrentDayMailsCount(email.sender);
     if (emailsSent < 1000) {
-        // await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
         await emailsRepo.sendMail(email);
     }
     else {

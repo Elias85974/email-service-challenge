@@ -5,7 +5,7 @@ import {getStats} from "../service/AdminService";
 router.get("/stats", async (req, res) => {
     try {
         const statistics: {email: string, emailsSent: number}[] = await getStats();
-        res.status(200).send(statistics);
+        res.status(200).send({statistics: statistics, message: "All things working correctly"});
     }
     catch (e: any) {
         console.error(e);

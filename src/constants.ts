@@ -9,6 +9,11 @@ export type User = {
     userName: string,
     password: string,
 };
+export type registrationUser = {
+    email: string,
+    userName: string,
+    password: string
+}
 export type Email = {
     sender: string,
     recipient: string,

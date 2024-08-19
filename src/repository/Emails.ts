@@ -5,13 +5,31 @@ const userRepo: UserRepository = new UserRepository();
 
 export class EmailsRepository {
     async sendMail(email: Email) {
+        const { sender, ...emailData } = email;
         return prismaClient.email.create({
             data: {
-                subject: email.subject,
-                senderId: await userRepo.getIdFromMail(email.sender),
-                message: email.message,
-                date: new Date()
+                senderId: await userRepo.getIdFromMail(sender),
+                date: new Date(),
+                ...emailData
             }
         })
+    }
+
+    async createEmail(userId: number, emailData: { subject: string, message: string, recipient: string }): Promise<void> {
+        await prismaClient.email.create({
+            data: {
+                senderId: userId,
+                date: new Date(),
+                ...emailData
+            }
+        });
+    }
+
+    async deleteEmails(userId: number): Promise<void> {
+        await prismaClient.email.deleteMany({
+            where: {
+                senderId: userId,
+            },
+        });
     }
 }

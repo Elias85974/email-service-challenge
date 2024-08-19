@@ -22,10 +22,11 @@ model User {
 }
 
 model Email {
-  id       Int      @id @default(autoincrement())
-  sender   User     @relation(fields: [senderId], references: [id])
-  senderId Int
-  subject  String
-  message  String
-  date     DateTime
+  id        Int      @id @default(autoincrement())
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  Int
+  subject   String
+  message   String
+  date      DateTime
+  recipient String
 }
